@@ -1,0 +1,64 @@
+from machine import Pin,ADC
+from time import sleep
+count = 0
+
+switch1 = Pin(2,Pin.IN)
+switch2 = Pin(4,Pin.IN)
+
+LED1 = Pin(13,Pin.OUT)
+LED2 = Pin(12,Pin.OUT)
+LED3 = Pin(14,Pin.OUT)
+LEDR = Pin(27,Pin.OUT)
+
+Poten = ADC(Pin(34))
+Poten.atten(ADC.ATTN_11DB)
+Poten.width(ADC.WIDTH_10BIT)
+
+def LED_OFF():
+    LED1.value(0)
+    LED2.value(0)
+    LED3.value(0)
+    LEDR.value(0)
+    
+LED_OFF()
+status = input("Start program ? : ")
+
+while True:
+    
+    if status == "start" : 
+        poten = Poten.read()
+        print(" Poten :",poten)
+        sleep(0.2)
+
+        if poten >= 0 and poten< 255 :
+            LED1.value(1)
+            LED2.value(0)
+            LED3.value(0)
+            LEDR.value(0)
+        elif poten >= 255 and poten< 512 :
+            LED2.value(1)
+            LED1.value(0)
+            LED3.value(0)
+            LEDR.value(0)
+        elif poten >= 512 and poten< 767 :
+            LED3.value(1)
+            LED1.value(0)
+            LED2.value(0)
+            LEDR.value(0)
+        elif poten >= 767 and poten< 1023 :
+            LEDR.value(1)
+            LED1.value(0)
+            LED2.value(0)
+            LED3.value(0)
+            
+                
+        else:
+            LED_OFF()
+            count=0
+    else :
+        status = input("Start program ? : ")
+
+
+   
+
+
