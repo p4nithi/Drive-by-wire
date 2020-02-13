@@ -1,0 +1,29 @@
+from machine import Pin,ADC,PWM
+from time import sleep
+
+freq = 5000 # กำหนดความถี่ให้กับสัญญาณ pulse 
+switch = Pin(4,Pin.IN) # กำหนด Pin สวิตช์เป็น INPUT 
+LED = PWM(Pin(12),freq) # กำหนด Pin สวิตช์เป็น OUTPUT แบบ PWM
+Poten = ADC(Pin(34)) # กำหนด Pin POTEN เป็น INPUT ที่รับสํญญาณ analog
+Poten.atten(ADC.ATTN_11DB)
+Poten.width(ADC.WIDTH_10BIT) # ความละเอียดสัญญาณอยู่ที่ 0-1023 
+LED_status = 0 # กำหนดสถานะเริ่มต้นของ LED ให้ปิด
+
+while True:
+    brightness = Poten.read() # อ่านค่าจาก poten เก็บในตัวแปร brightness
+    input_sw = switch.value(); # อ่านค่าจาก switch เก็บในตัวแปร input_sw
+    print("SW:",switch.value(),"LED status :",LED_status,"LED = ",brightness) # แสดงค่าที่อ่านได้
+    sleep(0.1) # หน่วงเวลา
+    
+    if input_sw == 1:       # ตรวจสอบสวิตช์ว่าถูกกดหรือไม่ ถ้าถูกกดให้ทำ loop if else ด้านใน
+        if LED_status == 0:
+            LED_status = 1
+            sleep(0.1)
+        else :
+            LED_status = 0
+            sleep(0.1)
+    
+    if(LED_status == 1): # ถ้าสถานะ LED_status ==1  ให้ส่งค่าที่ได้รับจาก Poten ด้วยสัญญาณ PWM ไปที่ LED 
+        LED.duty(brightness)
+    elif(LED_status == 0):
+        LED.duty(0)
