@@ -1,0 +1,51 @@
+from machine import Pin,ADC
+from time import sleep
+count = 0
+
+switch1 = Pin(2,Pin.IN)
+switch2 = Pin(4,Pin.IN)
+
+LED1 = Pin(13,Pin.OUT)
+LED2 = Pin(12,Pin.OUT)
+LED3 = Pin(14,Pin.OUT)
+LEDR = Pin(27,Pin.OUT)
+
+Poten = ADC(Pin(34))
+Poten.atten(ADC.ATTN_11DB)
+Poten.width(ADC.WIDTH_10BIT)
+
+def LED_OFF():
+    LED1.value(0)
+    LED2.value(0)
+    LED3.value(0)
+    LEDR.value(0)
+    
+LED_OFF()
+while True:
+    
+    print("Switch1 :",switch1.value(),"Switch2 :",switch2.value()," Count :",count)
+    
+    sleep(0.3)
+    if switch1.value() == 1:
+        count = count + 1
+    elif switch2.value() == 1:
+        count = 0
+        
+        
+    if count == 1 :
+        LED1.value(1)
+    elif count == 2:
+        LED2.value(1)
+    elif count == 3:
+        LED3.value(1)
+    elif count == 4:
+        LEDR.value(1)
+            
+    else:
+        LED_OFF()
+        count=0
+
+
+
+   
+
